@@ -4,16 +4,21 @@ import { User } from './user';
 import { MessageService } from '../messages/message.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   currentUser: User;
+  redirectUrl: string;
+
+  get userType(): boolean {
+    return this.currentUser.isAdmin;
+  }
 
   get isLoggedIn(): boolean {
     return !!this.currentUser;
   }
 
-  constructor(private messageService: MessageService) { }
+  constructor(private messageService: MessageService) {}
 
   login(userName: string, password: string): void {
     if (!userName || !password) {
@@ -24,7 +29,7 @@ export class AuthService {
       this.currentUser = {
         id: 1,
         userName,
-        isAdmin: true
+        isAdmin: true,
       };
       this.messageService.addMessage('Admin login');
       return;
@@ -32,9 +37,11 @@ export class AuthService {
     this.currentUser = {
       id: 2,
       userName,
-      isAdmin: false
+      isAdmin: false,
     };
-    this.messageService.addMessage(`User: ${this.currentUser.userName} logged in`);
+    this.messageService.addMessage(
+      `User: ${this.currentUser.userName} logged in`
+    );
   }
 
   logout(): void {

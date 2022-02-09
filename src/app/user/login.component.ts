@@ -20,7 +20,11 @@ export class LoginComponent {
       this.authService.login(userName, password);
 
       // Navigate to the Product List page after log in.
-      this.route.navigate(['/products']);
+      if (this.authService.redirectUrl) {
+        this.route.navigateByUrl(this.authService.redirectUrl);
+      } else {
+        this.route.navigate(['/products']);
+      }
     } else {
       this.errorMessage = 'Please enter a user name and password.';
     }
